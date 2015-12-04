@@ -45,13 +45,16 @@ shinyServer(function(input, output, session) {
           data(list = "first.day.month")
         } else if (openOption == "First of Week") {
           # Find the First trading day of the week dates
-          source("Shared/FirstDayWeek.R")
+          #source("Shared/FirstDayWeek.R")
+          data(list = "first.day.week")
         } else if (openOption == "Daily") {
           # Find each unique possible trading date in underlying chosen to perform study daily
-          source("Shared/dailyopen.R")
+          #source("Shared/dailyopen.R")
+          data(list = "daily.open")
         } else if (openOption == "Earnings") {
           # Find each unique possible trading date in underlying chosen to perform study for earnings
-          source("Shared/earningsopen.R")
+          #source("Shared/earningsopen.R")
+          data(list = "earnings.dates")
         } else if (openOption == "Previous Close") {
           # Use custom dates normally chosen as the close of prior trades to open new ones
           # Fill in the custom dates .csv for this
