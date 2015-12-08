@@ -4,6 +4,7 @@
 # todos:
 # - packages for each study type
 # - output section cleanup and organization
+# - change envir .Global to current shiny envir
 
 # shinyServer function used to run application
 shinyServer(function(input, output, session) {
@@ -16,7 +17,7 @@ shinyServer(function(input, output, session) {
       withProgress(message = "Progress Bar", detail = "Setting up study", value = .05, {
         t <- 0 # Set inital trade number to zero
         progress.int <- .01 # Set progress bar increment amount
-
+        
         # Values defined by the customer in shiny ui
         assign("study", input$study, envir = .GlobalEnv)
         assign("stock", input$stock, envir = .GlobalEnv)
@@ -42,23 +43,23 @@ shinyServer(function(input, output, session) {
         # Opening frequency
         if (openOption == "First of Month") {
           # Find the First trading day of the month dates
-          data(list = "first.day.month")
+          data(list = "open.first.day.month")
+          assign("first.day", open.first.day.month, envir = .GlobalEnv)
         } else if (openOption == "First of Week") {
           # Find the First trading day of the week dates
-          #source("Shared/FirstDayWeek.R")
-          data(list = "first.day.week")
+          data(list = "open.first.day.week")
+          assign("first.day", open.first.day.week, envir = .GlobalEnv)
         } else if (openOption == "Daily") {
           # Find each unique possible trading date in underlying chosen to perform study daily
-          #source("Shared/dailyopen.R")
-          data(list = "daily.open")
+          data(list = "open.daily")
+          assign("first.day", open.daily, envir = .GlobalEnv)
         } else if (openOption == "Earnings") {
           # Find each unique possible trading date in underlying chosen to perform study for earnings
-          #source("Shared/earningsopen.R")
           data(list = "earnings.dates")
         } else if (openOption == "Previous Close") {
           # Use custom dates normally chosen as the close of prior trades to open new ones
           # Fill in the custom dates .csv for this
-          source("Shared/customopen.R")
+          # source("Shared/customopen.R")
         }
 
         # Close prior to earnings?
