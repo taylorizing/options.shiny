@@ -2,7 +2,7 @@
 # author: "Jason Taylor"
 
 # todos:
-# - utilities package
+# - Should axis variable be in global?
 
 # Global setup
 library(shiny) # main library to load shiny application

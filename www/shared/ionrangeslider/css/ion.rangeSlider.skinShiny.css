@@ -2,6 +2,7 @@
 
  * tastytrade color = #C94540
  * changed to burnt orange = #DC4405
+ * changed to blue from shinydashboard = #3c8dbc
 
 // This skin has been modified for use with Shiny.
 // It's based on the HTML5 skin, which doesn't require any sprites, but
@@ -43,16 +44,16 @@
 
 .irs-bar {
     height: 8px; top: 25px;
-    border-top: 1px solid #DC4405;
-    border-bottom: 1px solid #DC4405;
-    background: #DC4405;
+    border-top: 1px solid #3c8dbc;
+    border-bottom: 1px solid #3c8dbc;
+    background: #3c8dbc;
 }
     .irs-bar-edge {
         height: 8px; top: 25px;
         width: 14px;
-        border: 1px solid #DC4405;
+        border: 1px solid #3c8dbc;
         border-right: 0;
-        background: #DC4405;
+        background: #3c8dbc;
         border-radius: 16px 0 0 16px;
         -moz-border-radius: 16px 0 0 16px;
     }
@@ -103,7 +104,7 @@
     font-size: 11px; line-height: 1.333;
     text-shadow: none;
     padding: 1px 3px;
-    background: #DC4405;
+    background: #3c8dbc;
     border-radius: 3px;
     -moz-border-radius: 3px;
 }

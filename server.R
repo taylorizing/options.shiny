@@ -2,22 +2,29 @@
 # author: "Jason Taylor"
 
 # todos:
-# - packages for each study type
+# - create .RData files for earnings dates add to options.data package
 # - output section cleanup and organization
 # - change envir .Global to current shiny envir
+# - move commissions to function for resusability
+# - work on earnings dates trade entry requirement
+# - create ability to have stock be ALL
+# - grab ALL Stock list from the available choices, it is hard coded now
 
 # shinyServer function used to run application
 shinyServer(function(input, output, session) {
   # Uncomment next line for debugging to console
   # options(shiny.trace = TRUE)
+  # debug
+  # Rprof("boot.out")
+  # Rprof(NULL)
   # Reactive section for building executed trade list
   trades <- reactive({
     input$goPlot  # This enables the script to run once prior to clicking run
     isolate( {# Isolate the expensive code to only run when Go button clicked
       withProgress(message = "Progress Bar", detail = "Setting up study", value = .05, {
         t <- 0 # Set inital trade number to zero
-        progress.int <- .01 # Set progress bar increment amount
-        
+        progress.int <- .001 # Set progress bar increment amount
+
         # Values defined by the customer in shiny ui
         assign("study", input$study, envir = .GlobalEnv)
         assign("stock", input$stock, envir = .GlobalEnv)
@@ -36,10 +43,17 @@ shinyServer(function(input, output, session) {
         assign("min.roc", input$min.roc, envir = .GlobalEnv)
         assign("p.delta.lim", p.delta + .1, envir = .GlobalEnv)
         assign("c.delta.lim", c.delta - .1, envir = .GlobalEnv)
-        
+        # debug
+        assign("stock.list", as.data.frame(c("AMZN", "EEM", "EWZ", "FXI", "GDX",
+                                             "GS", "IBM", "SLV", "XLE"),
+                                           stringsAsFactors = FALSE),
+               envir = .GlobalEnv)
+        # end debug
         # Load option chain data for stock chosen by customer
+        if (!stock == "ALL") {
         data(list = paste0(stock, ".options"))
-        
+        } 
+
         # Opening frequency
         if (openOption == "First of Month") {
           # Find the First trading day of the month dates
@@ -82,7 +96,15 @@ shinyServer(function(input, output, session) {
         LongStock(progress.int, t)
       } # End Long Stock Strategy
       if (study == "Strangle") {
-        strangle(progress.int, t)
+        if (stock == "ALL") {
+          for (i in 1:nrow(stock.list)) {
+            data(list = paste0(stock.list[i, ], ".options"))
+            strangle(progress.int, t)
+          }
+        }
+        else {
+          strangle(progress.int, t)
+        }
       } # End Strangle Study
       if (study == "Straddle") {
         straddle(progress.int, t)
@@ -159,7 +181,8 @@ shinyServer(function(input, output, session) {
     ))
     # Download table
     output$downloadData <- downloadHandler(
-      filename = function() { paste('results.table.csv') },
+      filename = function() { paste(stock, 'pdelta', as.character(p.delta),
+                                    'cdelta', as.character(c.delta), 'results.csv') },
       content = function(file) {
         write.csv(results.table, file)
       }
@@ -219,9 +242,9 @@ shinyServer(function(input, output, session) {
       updateSelectInput(session, "earn.close", selected = "No")
     } else if (input$study == "Strangle")  {
       updateSelectInput(session, "open.dte", selected = 45)
-      updateSelectInput(session, "call.delta", selected = .16)
-      updateSelectInput(session, "put.delta", selected = -.16)
-      updateSelectInput(session, "open.ivrank", selected = c(50, 100))
+      #updateSelectInput(session, "call.delta", selected = .16)
+      #updateSelectInput(session, "put.delta", selected = -.16)
+      #updateSelectInput(session, "open.ivrank", selected = c(50, 100))
       updateSelectInput(session, "proftarg", selected = 50)
       updateSelectInput(session, "loss.lim", selected = 2)
       updateSelectInput(session, "l.loss.lim", selected = 0)
