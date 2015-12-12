@@ -9,6 +9,10 @@
 # - work on earnings dates trade entry requirement
 # - create ability to have stock be ALL
 # - grab ALL Stock list from the available choices, it is hard coded now
+# - add percentage winners to graph as an axis
+# - Format the HTML at top of chart 
+# - add stock name to the results and results table because of all run
+# - change the icons for the dashboard
 
 # shinyServer function used to run application
 shinyServer(function(input, output, session) {
