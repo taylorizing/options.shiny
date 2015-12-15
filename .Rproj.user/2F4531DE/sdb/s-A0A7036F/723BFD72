@@ -1,0 +1,19 @@
+{
+    "collab_server" : "",
+    "contents" : ".Rhistory\n.RData\n*.Rproj",
+    "created" : 1450143602942.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1323667700",
+    "id" : "723BFD72",
+    "lastKnownWriteTime" : 1450143654,
+    "path" : "~/R/options.shiny/.gitignore",
+    "project_path" : ".gitignore",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "gitignore"
+}
