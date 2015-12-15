@@ -9,6 +9,9 @@
 # - work on earnings dates trade entry requirement
 # - create ability to have stock be ALL
 # - grab ALL Stock list from the available choices, it is hard coded now
+# - add stock name to results table strangle done, need to add others
+# - add beep at the end install.packages("beepr")
+# - use semi-join rather than merge?
 # - add percentage winners to graph as an axis
 # - Format the HTML at top of chart 
 # - add stock name to the results and results table because of all run
@@ -22,6 +25,20 @@ shinyServer(function(input, output, session) {
   # Rprof("boot.out")
   # Rprof(NULL)
   # Reactive section for building executed trade list
+  # debug
+  beep()
+  
+  observe({
+    input$stock
+    isolate({
+      print("31")
+      if (exists("results", envir = .GlobalEnv) && is.data.frame(get("results"))) {
+        rm(results, envir = .GlobalEnv)
+      }
+    })
+  })
+  # end debug
+  
   trades <- reactive({
     input$goPlot  # This enables the script to run once prior to clicking run
     isolate( {# Isolate the expensive code to only run when Go button clicked
