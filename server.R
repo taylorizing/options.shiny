@@ -2,17 +2,9 @@
 # author: "Jason Taylor"
 
 # todos:
-# - create .RData files for earnings dates add to options.data package
-# - output section cleanup and organization
 # - change envir .Global to current shiny envir
-# - move commissions to function for resusability
-# - work on earnings dates trade entry requirement
-# - create ability to have stock be ALL strangle done, need add others
-# - add stock name to results table strangle done, need to add others
-# - add beep at the end install.packages("beepr")
-# - use semi-join rather than merge?
-# - add percentage winners to graph as an axis
-# - change the icons for the dashboard
+# - default to not run when open to save time
+# - ensure earnings date is correct due to AM or PM reporting
 
 # shinyServer function used to run application
 shinyServer(function(input, output, session) {
@@ -24,7 +16,7 @@ shinyServer(function(input, output, session) {
   
   # Reactive section for building executed trade list
   trades <- reactive({
-    input$goPlot  # This enables the script to run once prior to clicking run
+    input$goPlot  # This enables the script to run when clicking action button
     # Isolate the expensive code to only run when Go button clicked
     isolate({
       # We reset the results data.frame when inputs are changed
@@ -53,7 +45,8 @@ shinyServer(function(input, output, session) {
         assign("min.roc", input$min.roc, envir = .GlobalEnv)
         assign("p.delta.lim", p.delta + .1, envir = .GlobalEnv)
         assign("c.delta.lim", c.delta - .1, envir = .GlobalEnv)
-        assign("stock.list", as.data.frame(symbol.list[-length(symbol.list)], stringsAsFactors = FALSE),
+        assign("stock.list", as.data.frame(symbol.list[-length(symbol.list)],
+                                           stringsAsFactors = FALSE),
                envir = .GlobalEnv)
 
         # Load option chain data for stock chosen by customer
@@ -76,7 +69,8 @@ shinyServer(function(input, output, session) {
           assign("first.day", open.daily, envir = .GlobalEnv)
         } else if (openOption == "Earnings") {
           # Find each unique possible trading date in underlying chosen to perform study for earnings
-          data(list = "earnings.dates")
+          data(list = paste0("earnings.dates.", stock))
+          assign("first.day", earnings.dates, envir = .GlobalEnv)
         } else if (openOption == "Previous Close") {
           # Use custom dates normally chosen as the close of prior trades to open new ones
           # Fill in the custom dates .csv for this
@@ -86,7 +80,8 @@ shinyServer(function(input, output, session) {
         # Close prior to earnings?
         if (earn.close == "Yes")  {
           # Find the earnings dates for this underlying for possible close dates
-          source("Shared/earningsdates.R")
+          data(list = paste0("earnings.dates.", stock))
+          assign("earnings.close", earnings.dates, envir = .GlobalEnv)
         }
         
       }) # End setting up studies progress bar
@@ -214,52 +209,9 @@ shinyServer(function(input, output, session) {
   
   # Reset default values when inputs change to give a good starting point
   observe({
-    if (input$stock == "SLV" || input$stock == "SPY")  {
-      updateSelectInput(session, "earn.close", selected = "No")
-    }
-    if (input$study == "Call Calendar") {
-      updateSelectInput(session, "open.dte", selected = 60)
-      updateSelectInput(session, "second.dte", selected = 30)
-      updateSelectInput(session, "call.delta", selected = .16)
-      updateSelectInput(session, "open.ivrank", selected = c(0, 25))
-      updateSelectInput(session, "proftarg", selected = 50)
-    } else if (input$study == "Poor Mans Cov Call")  {
-      updateSelectInput(session, "open.dte", selected = 120)
-      updateSelectInput(session, "second.dte", selected = 30)
-      updateSelectInput(session, "call.delta", selected = .16)
-      updateSelectInput(session, "open.ivrank", selected = c(0, 25))
-      updateSelectInput(session, "proftarg", selected = 50)
-      updateSelectInput(session, "loss.lim", selected = 2)
-      updateSelectInput(session, "l.loss.lim", selected = 50)
-    } else if (input$study == "Short Put")  {
-      updateSelectInput(session, "open.dte", selected = 45)
-      updateSelectInput(session, "put.delta", selected = -.16)
-      updateSelectInput(session, "open.ivrank", selected = c(50, 100))
-      updateSelectInput(session, "proftarg", selected = 50)
-      updateSelectInput(session, "loss.lim", selected = 2)
-      updateSelectInput(session, "l.loss.lim", selected = 0)
-      updateSelectInput(session, "gamma.days", selected = 0)
-      updateSelectInput(session, "earn.close", selected = "No")
-    } else if (input$study == "Straddle")  {
-      updateSelectInput(session, "open.dte", selected = 45)
-      updateSelectInput(session, "open.ivrank", selected = c(50, 100))
-      updateSelectInput(session, "proftarg", selected = 25)
-      updateSelectInput(session, "loss.lim", selected = 2)
-      updateSelectInput(session, "gamma.days", selected = 0)
-      updateSelectInput(session, "earn.close", selected = "No")
-    } else if (input$study == "Strangle")  {
-      updateSelectInput(session, "open.dte", selected = 45)
-      #updateSelectInput(session, "call.delta", selected = .16)
-      #updateSelectInput(session, "put.delta", selected = -.16)
-      #updateSelectInput(session, "open.ivrank", selected = c(50, 100))
-      updateSelectInput(session, "proftarg", selected = 50)
-      updateSelectInput(session, "loss.lim", selected = 2)
-      updateSelectInput(session, "l.loss.lim", selected = 0)
-      updateSelectInput(session, "gamma.days", selected = 0)
-      updateSelectInput(session, "earn.close", selected = "No")
-    }
-    if (input$openOption == "Earnings") {
-      updateSelectInput(session, "open.dte", selected = 1)
+    if (input$stock == "EEM" || input$stock == "EWZ" || input$stock == "FXI" ||
+        input$stock == "GDX" || input$stock == "SLV" || input$stock == "SPY" ||
+        input$stock == "XLE")  {
       updateSelectInput(session, "earn.close", selected = "No")
     }
   })

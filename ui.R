@@ -18,7 +18,7 @@ dashboardPage(
   sidebar <- dashboardSidebar(
     sidebarMenu(
       menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
-      menuItem("Study", tabName = "Study", icon = icon("cog"),
+      menuItem("Study", tabName = "Study", icon = icon("cogs"),
                # selectInput("stock", "Stock", c("AMZN", "EEM", "EWZ", "FXI",
                #                                 "GDX", "GS", "IBM", "SLV",
                #                                 "SPY", "XLE", "ALL")),
@@ -37,7 +37,7 @@ dashboardPage(
                                                       "Previous Close"))
       ),
       menuItem("Entry Criteria", tabName = "Entry Criteria", icon = icon("cogs"),
-               sliderInput("open.dte", "DTE", 0, 365, 45, step = 1),
+               sliderInput("open.dte", "DTE", 0, 90, 45, step = 5),
                conditionalPanel(
                  condition = ("input.study == 'Call Calendar' ||
                                 input.study == 'Poor Mans Cov Call' ||
@@ -55,7 +55,7 @@ dashboardPage(
                sliderInput("open.ivrank", "IV Rank", 0, 100, c(0, 100), step = 1),
                sliderInput("min.roc", "Min ROC", 0, 50, 11, step = 1)
       ),
-      menuItem("Exit Criteria", tabName = "Exit Criteria", icon = icon("dashboard"),
+      menuItem("Exit Criteria", tabName = "Exit Criteria", icon = icon("cogs"),
                sliderInput("proftarg", "Profit target %", 0, 100, 50, step = 5),
                conditionalPanel(
                  condition = ("input.study == 'Poor Mans Cov Call' ||
@@ -81,9 +81,7 @@ dashboardPage(
                                 input.study == 'Straddle') &&
                                 (input.stock == 'AMZN' ||
                                 input.stock == 'GS' ||
-                                input.stock == 'IBM' ||
-                                input.stock == 'AAPL' ||
-                                input.stock == 'GOOG')  &&
+                                input.stock == 'IBM')  &&
                                 (input.openOption == 'First of Week' ||
                                 input.openOption == 'First of Month' ||
                                 input.openOption == 'Previous Close' ||
@@ -91,7 +89,7 @@ dashboardPage(
                  selectInput("earn.close", "Close day prior to earnings?",
                              c("No", "Yes")))
       ),
-      menuItem("Run", tabName = "run", icon = icon("dashboard"),
+      menuItem("Run", tabName = "run", icon = icon("play-circle"),
                actionButton('goPlot', 'Run Study')
       )
     )
