@@ -10,6 +10,8 @@ library(shinythemes) # themes for shiny
 library(ggvis) # visualization used in shiny app
 library(options.data) # custom local package with options data
 library(options.studies) # custom local package with options strategy functions
+library(audio) # used by beepr package
+library(beepr) # sends alert to speaker when script is complete
 
 # Variables that can be put on the axis
 axis_vars <- c(
@@ -20,3 +22,5 @@ axis_vars <- c(
   "Year" = "year",
   "Open ROC" = "open.roc"
 )
+
+symbol.list <- c("AMZN", "EEM", "EWZ", "FXI", "GDX", "GS", "IBM", "SLV", "XLE", "ALL")

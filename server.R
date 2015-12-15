@@ -7,41 +7,30 @@
 # - change envir .Global to current shiny envir
 # - move commissions to function for resusability
 # - work on earnings dates trade entry requirement
-# - create ability to have stock be ALL
-# - grab ALL Stock list from the available choices, it is hard coded now
+# - create ability to have stock be ALL strangle done, need add others
 # - add stock name to results table strangle done, need to add others
 # - add beep at the end install.packages("beepr")
 # - use semi-join rather than merge?
 # - add percentage winners to graph as an axis
-# - Format the HTML at top of chart 
-# - add stock name to the results and results table because of all run
 # - change the icons for the dashboard
 
 # shinyServer function used to run application
 shinyServer(function(input, output, session) {
   # Uncomment next line for debugging to console
   # options(shiny.trace = TRUE)
-  # debug
+  # The following two lines can be inserted to box in code section for profiling
   # Rprof("boot.out")
   # Rprof(NULL)
+  
   # Reactive section for building executed trade list
-  # debug
-  beep()
-  
-  observe({
-    input$stock
-    isolate({
-      print("31")
-      if (exists("results", envir = .GlobalEnv) && is.data.frame(get("results"))) {
-        rm(results, envir = .GlobalEnv)
-      }
-    })
-  })
-  # end debug
-  
   trades <- reactive({
     input$goPlot  # This enables the script to run once prior to clicking run
-    isolate( {# Isolate the expensive code to only run when Go button clicked
+    # Isolate the expensive code to only run when Go button clicked
+    isolate({
+      # We reset the results data.frame when inputs are changed
+      if (exists("results", envir = .GlobalEnv) && is.data.frame(get("results"))) {
+        rm(results, envir = .GlobalEnv)
+      } 
       withProgress(message = "Progress Bar", detail = "Setting up study", value = .05, {
         t <- 0 # Set inital trade number to zero
         progress.int <- .001 # Set progress bar increment amount
@@ -64,12 +53,9 @@ shinyServer(function(input, output, session) {
         assign("min.roc", input$min.roc, envir = .GlobalEnv)
         assign("p.delta.lim", p.delta + .1, envir = .GlobalEnv)
         assign("c.delta.lim", c.delta - .1, envir = .GlobalEnv)
-        # debug
-        assign("stock.list", as.data.frame(c("AMZN", "EEM", "EWZ", "FXI", "GDX",
-                                             "GS", "IBM", "SLV", "XLE"),
-                                           stringsAsFactors = FALSE),
+        assign("stock.list", as.data.frame(symbol.list[-length(symbol.list)], stringsAsFactors = FALSE),
                envir = .GlobalEnv)
-        # end debug
+
         # Load option chain data for stock chosen by customer
         if (!stock == "ALL") {
           data(list = paste0(stock, ".options"))
