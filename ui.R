@@ -19,9 +19,6 @@ dashboardPage(
     sidebarMenu(
       menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
       menuItem("Study", tabName = "Study", icon = icon("cogs"),
-               # selectInput("stock", "Stock", c("AMZN", "EEM", "EWZ", "FXI",
-               #                                 "GDX", "GS", "IBM", "SLV",
-               #                                 "SPY", "XLE", "ALL")),
                selectInput("stock", "Stock", symbol.list),
                selectInput("study", "Study", c("Strangle")),
                # selectInput("study", "Study", c("Strangle",

@@ -5,6 +5,7 @@
 # - change envir .Global to current shiny envir
 # - default to not run when open to save time
 # - ensure earnings date is correct due to AM or PM reporting
+# - change Run button so it is not in a menu
 
 # shinyServer function used to run application
 shinyServer(function(input, output, session) {
@@ -13,7 +14,7 @@ shinyServer(function(input, output, session) {
   # The following two lines can be inserted to box in code section for profiling
   # Rprof("boot.out")
   # Rprof(NULL)
-  
+  # options(shiny.error = recover)
   # Reactive section for building executed trade list
   trades <- reactive({
     input$goPlot  # This enables the script to run when clicking action button

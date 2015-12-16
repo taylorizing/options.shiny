@@ -23,4 +23,4 @@ axis_vars <- c(
   "Open ROC" = "open.roc"
 )
 
-symbol.list <- c("AMZN", "EEM", "EWZ", "FXI", "GDX", "GS", "IBM", "SLV", "XLE", "ALL")
+symbol.list <- c("AMZN", "EEM", "EWZ", "FXI", "GDX", "GS", "IBM", "SLV", "SPY", "XLE", "ALL")
